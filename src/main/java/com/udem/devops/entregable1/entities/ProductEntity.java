@@ -18,6 +18,6 @@ public class ProductEntity {
     private String size;
     private String color;
     private String material;
-    private Integer warranty;
+    private String warranty;
     private String origin;
 }

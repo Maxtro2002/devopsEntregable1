@@ -18,7 +18,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public UserEntity getUserById(Long id) {
+    public UserEntity getUserById(String id) {
         Optional<UserEntity> user = userRepository.findById(id);
         return user.orElse(null);
     }
@@ -28,7 +28,7 @@ public class UserService {
     }
 
     public UserEntity updateUser(Long id, UserEntity user) {
-        Optional<UserEntity> existingUser = userRepository.findById(id);
+        Optional<UserEntity> existingUser = userRepository.findById(id.toString());
         if (existingUser.isPresent()) {
             UserEntity updatedUser = existingUser.get();
             updatedUser.setEmail(user.getEmail());
@@ -41,7 +41,7 @@ public class UserService {
         }
     }
 
-    public void deleteUser(Long id) {
+    public void deleteUser(String id) {
         userRepository.deleteById(id);
     }
 }
