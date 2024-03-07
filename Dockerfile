@@ -1,17 +1,27 @@
 # Start with a base image containing Java runtime
-FROM adopt openjdk:17-jdk-hotspot
+FROM maven:3.8.4-openjdk-17-slim AS build
 
-# Add Maintainer Info
-LABEL maintainer="jspr200231@gmail.com"
+# The application's .jar file
+ARG JAR_FILE=target/*.jar
 
-FROM openjdk:17-jdk-slim
+# cd into the app directory
+WORKDIR /usr/src/app
 
-WORKDIR /app
+# Copy the application's source code from the host to the docker image
+COPY pom.xml .
+COPY src ./src
 
-COPY target/my-app.jar .
+# Package the application
+RUN mvn package -DskipTests
 
-CMD ["java", "-jar", "my-app.jar"]
+# Specifies a new build stage with a new base image
+FROM openjdk:17-slim
 
+# Make port 8080 available to the world outside this container
 EXPOSE 8080
 
-HEALTHCHECK CMD ["curl", "-f", "http://localhost:8080/health"]
+# The application's .jar file
+ARG JAR_FILE=target/*.jar
+
+# Copy the jar file from the build stage
+COPY --from=build /usr/src/app/${JAR_FILE} app.jar
