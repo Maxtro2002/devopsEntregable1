@@ -4,17 +4,14 @@ FROM adopt openjdk:17-jdk-hotspot
 # Add Maintainer Info
 LABEL maintainer="jspr200231@gmail.com"
 
-# Add a volume pointing to /tmp
-VOLUME /tmp
+FROM openjdk:17-jdk-slim
 
-# Make port 8080 available to the world outside this container
+WORKDIR /app
+
+COPY target/my-app.jar .
+
+CMD ["java", "-jar", "my-app.jar"]
+
 EXPOSE 8080
 
-# The application's jar file
-ARG JAR_FILE=target/*.jar
-
-# Add the application's jar to the container
-ADD ${JAR_FILE} app.jar
-
-# Run the jar file
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+HEALTHCHECK CMD ["curl", "-f", "http://localhost:8080/health"]
