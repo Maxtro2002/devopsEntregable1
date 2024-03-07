@@ -38,10 +38,13 @@ jobs:
           fi
 
       - name: Build and push Docker image
-        if: ${{ success() }}
         uses: docker/build-push-action@v2
         with:
           context: .
-          dockerfile: path/to/your/Dockerfile
           push: true
           tags: maxtro2002/devops_entraga1:latest
+          secrets:
+            - name: DOCKER_USERNAME
+              secret: ${{ secrets.DOCKER_USERNAME }}
+            - name: DOCKER_PASSWORD
+              secret: ${{ secrets.DOCKER_PASSWORD }}
