@@ -1,4 +1,4 @@
-name: CI-proc
+name: CI-prod
 
 on:
   push:
